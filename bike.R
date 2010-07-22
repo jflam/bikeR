@@ -1,4 +1,5 @@
 # Library of R functions for working with Garmin Edge data
+# By John Lam
 
 
 feet_per_meter = 3.2808399
