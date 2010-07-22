@@ -1,3 +1,6 @@
+# Library of R functions for working with Garmin Edge data
+
+
 feet_per_meter = 3.2808399
 
 convert_all = function() {
