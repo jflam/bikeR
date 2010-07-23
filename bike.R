@@ -34,6 +34,19 @@ loadx = function(x, path) {
     return(x)
 }
 
+# Compute normalized power for the data set
+# Note that it is possible that the data set does not contain
+# power data, in which case the function returns NA.
+
+normalized_power = function(d) {
+    if (is.null(d$Power..watts.))
+        return(NA)
+
+    power = d$Power..watts.
+    power = power[power > 0]
+    return(mean(power ** 4) ** 0.25)
+}
+
 elevation = function(d) {
     a = d$Altitude..m.
     a = a[!is.na(a)]
