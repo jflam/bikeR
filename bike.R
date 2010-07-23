@@ -77,6 +77,28 @@ intensity_factor = function(d) {
     return (npif)
 }
 
+# Training stress score indicates a rough duration of 
+# post-ride fatigue.
+# <150    Low        Recovery complete by next day
+# 150-300 Moderate   Some residual fatigue next day
+# 300-450 High       Some residual fatigue even after 2 days
+# >450    Very high  Residual fatigue lasting several days likely
+
+training_stress_score = function(d) {
+    power = d$Power..watts.
+    if (is.null(power))
+        return (NA)
+    
+    timestamp = d$Timestamp..s.
+    np = normalized_power(d)
+    iff = intensity_factor(d)
+
+    # TODO: why is timestamp treated as a factor?
+    duration = length(timestamp)
+
+    return ((duration * np * iff / (ftp * 3600)) * 100)
+}
+
 elevation = function(d) {
     a = d$Altitude..m.
     a = a[!is.na(a)]
