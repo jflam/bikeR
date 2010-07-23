@@ -39,12 +39,24 @@ loadx = function(x, path) {
 # power data, in which case the function returns NA.
 
 normalized_power = function(d) {
-    if (is.null(d$Power..watts.))
-        return(NA)
-
     power = d$Power..watts.
+    if (is.null(power))
+        return (NA)
+
     power = power[power > 0]
-    return(mean(power ** 4) ** 0.25)
+    return (mean(power ** 4) ** 0.25)
+}
+
+# Variability index indicates much variability there was
+# in your ride over its duration
+
+variability_index = function(d) {
+    power = d$Power..watts.
+    if (is.null(power))
+        return (NA)
+
+    np = normalized_power(d)
+    return (np / mean(power))
 }
 
 elevation = function(d) {
