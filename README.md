@@ -1,4 +1,4 @@
-BikeR Cycling Data Analysis Library
+bikeR Cycling Data Analysis Library
 ===================================
 
 This is a library of R code that can be used to analyze Garmin FIT
