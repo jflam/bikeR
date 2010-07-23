@@ -9,6 +9,12 @@ including:
 * Computing normalized power for a ride
 * Generating power reports that contain the peak 5s, 1min, 5min, and FTP for your ride.
 
+3rd Party Software
+------------------
+
+This project contains a binary, FitCSVTool.exe that was compiled from the Garmin 
+FIT SDK, which can be found at: http://www.thisisant.com/pages/products/fit-sdk.
+
 Contributing
 ------------
 
