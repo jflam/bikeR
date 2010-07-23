@@ -4,6 +4,10 @@
 
 feet_per_meter = 3.2808399
 
+# Rider constants
+
+ftp = 205  # functional threshold power in watts
+
 convert_all = function() {
     setwd("c:/fit/fit")
     files = dir(pattern = "*.fit")
@@ -57,6 +61,20 @@ variability_index = function(d) {
 
     np = normalized_power(d)
     return (np / mean(power))
+}
+
+# Intensity factor is the ratio of the normalized power for
+# the ride divided by the rider's functional threshold power
+
+intensity_factor = function(d) {
+    power = d$Power..watts.
+    if (is.null(power))
+        return (NA)
+
+    np = normalized_power(d)
+    npif = np / ftp
+    
+    return (npif)
 }
 
 elevation = function(d) {
