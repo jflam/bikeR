@@ -38,43 +38,55 @@ loadx = function(x, path) {
     return(x)
 }
 
-# Compute normalized power for the data set
-# Note that it is possible that the data set does not contain
-# power data, in which case the function returns NA.
+# Remove all NA's and zero power values
 
-normalized_power = function(d) {
+clean_power = function(d) {
     power = d$Power..watts.
     if (is.null(power))
         return (NA)
 
-    power = power[power > 0]
+    return (power[power > 0 & !is.na(power)])
+}
+
+# Compute normalized power for the data set
+# Note that it is possible that the data set does not contain
+# power data, in which case the function returns NA.
+
+normalized_power = function(power) {
     return (mean(power ** 4) ** 0.25)
+}
+
+calc_ftp = function(d) {
+    power = clean_power(d)
+    p1 = filter(power**4,rep(1/1200,1200))
+    p2 = p1[!is.na(p1)]
+    p3 = p2 ** 0.25
+    ftp = max(p3) * 0.95
+    return (ftp)
 }
 
 # Variability index indicates much variability there was
 # in your ride over its duration
 
-variability_index = function(d) {
-    power = d$Power..watts.
-    if (is.null(power))
-        return (NA)
-
-    np = normalized_power(d)
+variability_index = function(power) {
+    np = normalized_power(power)
     return (np / mean(power))
 }
 
 # Intensity factor is the ratio of the normalized power for
 # the ride divided by the rider's functional threshold power
 
-intensity_factor = function(d) {
-    power = d$Power..watts.
-    if (is.null(power))
+intensity_factor = function(power) {
+    np = normalized_power(power)
+    npif = np / ftp
+    return (npif)
+}
+
+power_report = function(d) {
+    if (is.na(clean_power(d)))
         return (NA)
 
-    np = normalized_power(d)
-    npif = np / ftp
     
-    return (npif)
 }
 
 # Training stress score indicates a rough duration of 
@@ -84,18 +96,9 @@ intensity_factor = function(d) {
 # 300-450 High       Some residual fatigue even after 2 days
 # >450    Very high  Residual fatigue lasting several days likely
 
-training_stress_score = function(d) {
-    power = d$Power..watts.
-    if (is.null(power))
-        return (NA)
-    
-    timestamp = d$Timestamp..s.
-    np = normalized_power(d)
-    iff = intensity_factor(d)
-
-    # TODO: why is timestamp treated as a factor?
-    duration = length(timestamp)
-
+training_stress_score = function(power, duration) {
+    np = normalized_power(power)
+    iff = intensity_factor(power)
     return ((duration * np * iff / (ftp * 3600)) * 100)
 }
 
