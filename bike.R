@@ -65,6 +65,14 @@ calc_ftp = function(d) {
     return (ftp)
 }
 
+calc_ftp60 = function(d) {
+    power = clean_power(d)
+    p1 = filter(power**4,rep(1/3600,3600))
+    p2 = p1[!is.na(p1)]
+    p3 = p2 ** 0.25
+    return (max(p3))
+}
+
 # Variability index indicates much variability there was
 # in your ride over its duration
 
