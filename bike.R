@@ -7,6 +7,8 @@ feet_per_meter = 3.2808399
 # Rider constants
 
 ftp = 205  # functional threshold power in watts
+quadrant_cadence = 80 # magic 80 rpm cadence value for quadrant analysis
+crank_length = 0.170  # 170mm cranks in meters
 
 convert_all = function() {
     setwd("c:/fit/fit")
@@ -27,10 +29,16 @@ load_all = function() {
     dates = as.Date(as.character(strsplit(files, "\\.csv")))
     read_file = function(path) {
         data = read.csv(path)
+        data$time_offset = as.integer(data$Timestamp..s.)
         subset(data, !is.na(data$Speed..m.s.))
     }
     data = lapply(files, read_file)
     list(date = dates, data = data)
+}
+
+time_slice = function(d, start, duration) {
+    # TODO: convert time from hh::mm::ss into offset
+    subset(d, d$time_offset > start & d$time_offset < start + duration)   
 }
 
 loadx = function(x, path) {
@@ -158,6 +166,30 @@ daily_elevation_report = function(d) {
                daily_descending_meters = daily_descending,
                daily_ascending_feet = daily_ascending * feet_per_meter,
                daily_descending_feet = daily_descending * feet_per_meter)
+}
+
+calc_quadrant = function(d) {
+    # remove zero power from d and remove zero cadence
+    e = subset(d, d$Cadence..rpm. > 0 & d$Power..watts. > 0)
+    cadence = e$Cadence..rpm.
+    power = e$Power..watts.
+
+    return (list(aepf = (power * 60) / (cadence * 2 * pi * crank_length),
+                 cpv = cadence * crank_length * 2 * pi / 60))
+}
+
+plot_quadrant = function(d) {
+    r = calc_quadrant(d)
+    plot(r$cpv, r$aepf, main="Quadrant Analysis",
+         xlab="Circumferential Pedal Velocity (CPV), (m/s)", 
+         ylab="Average Effective Pedal Force (AEPF), (N)")
+    aepf = (ftp * 60) / (quadrant_cadence * 2 * pi * crank_length)
+    cpv = quadrant_cadence * crank_length * 2 * pi / 60
+
+    # plot quadrant lines at FTP and selected cadence (how do we get 80 as
+    # cadence?)
+    abline(h = aepf)
+    abline(v = cpv)
 }
 
 elevation_totals = function(d) {
