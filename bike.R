@@ -192,6 +192,12 @@ plot_quadrant = function(d) {
     abline(v = cpv)
 }
 
+plot_cadence = function(d) {
+    cadence = d$Cadence..rpm.
+    c = cadence[cadence < 150]
+    hist(c, max(c) / 5)
+}
+
 elevation_totals = function(d) {
     e = lapply(d$data, elevation)
     as.data.frame(c(rides = length(e), total(e)))
