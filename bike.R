@@ -195,7 +195,14 @@ plot_quadrant = function(d) {
 plot_cadence = function(d) {
     cadence = d$Cadence..rpm.
     c = cadence[cadence < 150]
-    hist(c, max(c) / 5)
+    hist(c, max(c) / 5, main="Cadence Histogram",
+         xlab="Cadence (rpm)")
+}
+
+plot_heartrate = function(d) {
+    h = d$Heart.Rate..bpm.
+    hist(h, (max(h) - min(h)) / 5, main="Heart Rate Histogram",
+         xlab="Heart Rate (bpm)")
 }
 
 elevation_totals = function(d) {
