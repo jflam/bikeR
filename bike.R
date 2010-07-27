@@ -196,8 +196,3 @@ elevation_totals = function(d) {
     e = lapply(d$data, elevation)
     as.data.frame(c(rides = length(e), total(e)))
 }
-
-get_data = function(date) {
-    do.call("rbind", d$data[which(d$date == as.Date(date))])
-}
-
