@@ -7,7 +7,7 @@ feet_per_meter = 3.2808399
 # Rider constants
 
 ftp = 205  # functional threshold power in watts
-quadrant_cadence = 80 # magic 80 rpm cadence value for quadrant analysis
+quadrant_cadence = 90 # magic 90 rpm cadence value for quadrant analysis
 crank_length = 0.170  # 170mm cranks in meters
 
 convert_all = function() {
@@ -71,6 +71,13 @@ calc_ftp = function(d) {
     p3 = p2 ** 0.25
     ftp = max(p3) * 0.95
     return (ftp)
+}
+
+calc_avg20 = function(d) {
+    power = clean_power(d)
+    p1 = filter(power,rep(1/1200,1200))
+    p2 = p1[!is.na(p1)]
+    mean(p2)
 }
 
 calc_ftp60 = function(d) {
