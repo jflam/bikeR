@@ -35,9 +35,8 @@ convert_fit_to_csv = function() {
 }
 
 load_all = function() {
-    setwd("c:/fit/csv")
-    files = dir(pattern = "*.csv")
-    dates = as.Date(as.character(strsplit(files, "\\.csv")))
+    files = dir(csv_path, pattern = "*.csv")
+    dates = as.Date(get_filenames(files))
     read_file = function(path) {
         data = read.csv(path)
         data$time_offset = as.integer(data$Timestamp..s.)
