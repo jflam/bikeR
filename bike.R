@@ -1,7 +1,6 @@
 # Library of R functions for working with Garmin Edge data
 # By John Lam
 
-
 feet_per_meter = 3.2808399
 
 # Rider constants
@@ -10,17 +9,29 @@ ftp = 205  # functional threshold power in watts
 quadrant_cadence = 90 # magic 90 rpm cadence value for quadrant analysis
 crank_length = 0.170  # 170mm cranks in meters
 
-convert_all = function() {
-    setwd("c:/fit/fit")
-    files = dir(pattern = "*.fit")
-    cmd = "c:/fit/biker/FitCSVTool.exe -b %s ../csv/%s.csv"
 
-    exec = function(path) {
-        system(sprintf(cmd, path, strsplit(path, "\\.fit")))
-    }
- 
-    lapply(files, exec)
-    return(TRUE)
+# Library paths
+
+fit_path = "c:/fit/fit"
+csv_path = "c:/fit/csv"
+lib_path = "c:/fit/bikeR"
+
+get_filenames = function(paths) {
+    filenames = strsplit(paths, "\\.")
+    return (sapply(filenames, function(x) { x[1] }))
+}
+
+get_path_differences = function() {
+    fit_files = get_filenames(dir(fit_path, pattern = "*.fit"))
+    csv_files = get_filenames(dir(csv_path, pattern = "*.csv"))
+    return (setdiff(fit_files, csv_files))
+}
+
+convert_fit_to_csv = function() {
+    files = get_path_differences()
+    cmd = "c:/fit/biker/FitCSVTool.exe -b %s/%s.fit %s/%s.csv"
+    sapply(files, function(p) { system(sprintf(cmd, fit_path, p, csv_path, p)) }) 
+    return (TRUE)
 }
 
 load_all = function() {
