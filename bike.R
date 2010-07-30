@@ -6,7 +6,7 @@ feet_per_meter = 3.2808399
 # Rider constants
 
 ftp = 205  # functional threshold power in watts
-quadrant_cadence = 90 # magic 90 rpm cadence value for quadrant analysis
+quadrant_cadence = 80 # magic 80 rpm cadence value for quadrant analysis
 crank_length = 0.170  # 170mm cranks in meters
 
 
@@ -188,16 +188,15 @@ calc_quadrant = function(d) {
                  cpv = cadence * crank_length * 2 * pi / 60))
 }
 
-plot_quadrant = function(d) {
+plot_quadrant = function(d, title=NA) {
     r = calc_quadrant(d)
-    plot(r$cpv, r$aepf, main="Quadrant Analysis",
+    t = ifelse(is.na(title), "Quadrant Analysis", sprintf("Quadrant Analysis for %s", title))
+    plot(r$cpv, r$aepf, main=t,
          xlab="Circumferential Pedal Velocity (CPV), (m/s)", 
          ylab="Average Effective Pedal Force (AEPF), (N)")
     aepf = (ftp * 60) / (quadrant_cadence * 2 * pi * crank_length)
     cpv = quadrant_cadence * crank_length * 2 * pi / 60
 
-    # plot quadrant lines at FTP and selected cadence (how do we get 80 as
-    # cadence?)
     abline(h = aepf)
     abline(v = cpv)
 
@@ -214,6 +213,8 @@ plot_quadrant = function(d) {
 
     total = length(r$cpv)
 
+    text(max(r$cpv) - 0.1, aepf + 20, sprintf("FTP: %dW", ftp))
+    text(cpv + 0.25, max(r$aepf), sprintf("Cadence: %d", quadrant_cadence))
     text(min(r$cpv) + 0.12, max(r$aepf), sprintf("Q1: %2.1f%%", q1/total*100))
     text(max(r$cpv) - 0.1, max(r$aepf), sprintf("Q2: %2.1f%%", q2/total*100))
     text(min(r$cpv) + 0.12, min(r$aepf), sprintf("Q3: %2.1f%%", q3/total*100))
