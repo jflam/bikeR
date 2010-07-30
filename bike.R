@@ -115,13 +115,6 @@ intensity_factor = function(power) {
     return (npif)
 }
 
-power_report = function(d) {
-    if (is.na(clean_power(d)))
-        return (NA)
-
-    
-}
-
 # Training stress score indicates a rough duration of 
 # post-ride fatigue.
 # <150    Low        Recovery complete by next day
