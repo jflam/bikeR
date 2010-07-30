@@ -191,14 +191,14 @@ calc_quadrant = function(d) {
 plot_quadrant = function(d, title=NA) {
     r = calc_quadrant(d)
     t = ifelse(is.na(title), "Quadrant Analysis", sprintf("Quadrant Analysis for %s", title))
-    plot(r$cpv, r$aepf, main=t,
+    plot(r$cpv, r$aepf, main=t, cex.lab = 0.8, 
          xlab="Circumferential Pedal Velocity (CPV), (m/s)", 
          ylab="Average Effective Pedal Force (AEPF), (N)")
     aepf = (ftp * 60) / (quadrant_cadence * 2 * pi * crank_length)
     cpv = quadrant_cadence * crank_length * 2 * pi / 60
 
-    abline(h = aepf)
-    abline(v = cpv)
+    abline(h = aepf, lty="dotted")
+    abline(v = cpv, lty="dotted")
 
     left = which(r$cpv < cpv)
     right = which(r$cpv >= cpv)
@@ -213,12 +213,12 @@ plot_quadrant = function(d, title=NA) {
 
     total = length(r$cpv)
 
-    text(max(r$cpv) - 0.1, aepf + 20, sprintf("FTP: %dW", ftp))
-    text(cpv + 0.25, max(r$aepf), sprintf("Cadence: %d", quadrant_cadence))
-    text(min(r$cpv) + 0.12, max(r$aepf), sprintf("Q1: %2.1f%%", q1/total*100))
-    text(max(r$cpv) - 0.1, max(r$aepf), sprintf("Q2: %2.1f%%", q2/total*100))
-    text(min(r$cpv) + 0.12, min(r$aepf), sprintf("Q3: %2.1f%%", q3/total*100))
-    text(max(r$cpv) - 0.1, min(r$aepf), sprintf("Q4: %2.1f%%", q4/total*100))
+    text(max(r$cpv) - 0.1, aepf + 20, sprintf("FTP: %dW", ftp), font=4, cex=0.8)
+    text(cpv + 0.25, max(r$aepf), sprintf("Cadence: %d", quadrant_cadence), font=4, cex=0.8)
+    text(min(r$cpv) + 0.12, max(r$aepf), sprintf("Q1: %2.1f%%", q1/total*100), font=4, cex=0.8)
+    text(max(r$cpv) - 0.1, max(r$aepf), sprintf("Q2: %2.1f%%", q2/total*100), font=4, cex=0.8)
+    text(min(r$cpv) + 0.12, min(r$aepf), sprintf("Q3: %2.1f%%", q3/total*100), font=4, cex=0.8)
+    text(max(r$cpv) - 0.1, min(r$aepf), sprintf("Q4: %2.1f%%", q4/total*100), font=4, cex=0.8)
 }
 
 plot_cadence = function(d) {
