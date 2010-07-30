@@ -207,6 +207,24 @@ plot_quadrant = function(d) {
     # cadence?)
     abline(h = aepf)
     abline(v = cpv)
+
+    left = which(r$cpv < cpv)
+    right = which(r$cpv >= cpv)
+    
+    aepf_left = r$aepf[left]
+    aepf_right = r$aepf[right]
+
+    q3 = length(aepf_left[aepf_left < aepf])
+    q1 = length(aepf_left[aepf_left >= aepf])
+    q4 = length(aepf_right[aepf_right < aepf])
+    q2 = length(aepf_right[aepf_right >= aepf])
+
+    total = length(r$cpv)
+
+    text(min(r$cpv) + 0.12, max(r$aepf), sprintf("Q1: %2.1f%%", q1/total*100))
+    text(max(r$cpv) - 0.1, max(r$aepf), sprintf("Q2: %2.1f%%", q2/total*100))
+    text(min(r$cpv) + 0.12, min(r$aepf), sprintf("Q3: %2.1f%%", q3/total*100))
+    text(max(r$cpv) - 0.1, min(r$aepf), sprintf("Q4: %2.1f%%", q4/total*100))
 }
 
 plot_cadence = function(d) {
