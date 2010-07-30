@@ -38,7 +38,8 @@ load_all = function() {
     files = dir(csv_path, pattern = "*.csv")
     dates = as.Date(get_filenames(files))
     read_file = function(path) {
-        data = read.csv(path)
+        full_path = sprintf("%s/%s", csv_path, path)
+        data = read.csv(full_path)
         data$time_offset = as.integer(data$Timestamp..s.)
         subset(data, !is.na(data$Speed..m.s.))
     }
