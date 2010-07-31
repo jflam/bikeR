@@ -1,14 +1,17 @@
 # Library of R functions for working with Garmin Edge data
 # By John Lam
 
+# Physical constants
+
 feet_per_meter = 3.2808399
+miles_per_meter = 0.62137 / 1000
+miles_per_meter_per_second = 3600 / 1000 * .62137
 
 # Rider constants
 
 ftp = 205  # functional threshold power in watts
 quadrant_cadence = 80 # magic 80 rpm cadence value for quadrant analysis
-crank_length = 0.170  # 170mm cranks in meters
-
+crank_length = 0.170  # crank length in meters
 
 # Library paths
 
@@ -238,4 +241,25 @@ plot_heartrate = function(d) {
 elevation_totals = function(d) {
     e = lapply(d$data, elevation)
     as.data.frame(c(rides = length(e), total(e)))
+}
+
+ride_summary = function(d) {
+    distance = max(d$Distance..m.) * miles_per_meter
+    maximum_speed = max(d$Speed..m.s.) * miles_per_meter_per_second
+    average_speed = distance / (length(d$Timestamp..s.)/3600)
+    return (list(distance=distance, maximum_speed=maximum_speed,
+average_speed=average_speed))
+}
+
+power_report = function(d) {
+    power = d$Power..watts.
+    power = power[power > 0]
+    mean_power = mean(power)
+    normalized_power = mean(power ** 4) ** 0.25
+    min_power = min(power)
+    max_power = max(power)
+    return (list(mean_power = mean_power,
+                 normalized_power = normalized_power,
+                 min_power = min_power,
+                 max_power = max_power))
 }
