@@ -9,9 +9,25 @@ miles_per_meter_per_second = 3600 / 1000 * .62137
 
 # Rider constants
 
-ftp = 205  # functional threshold power in watts
-quadrant_cadence = 80 # magic 80 rpm cadence value for quadrant analysis
-crank_length = 0.170  # crank length in meters
+ftp = 205              # functional threshold power in watts
+quadrant_cadence = 80  # magic 80 rpm cadence value for quadrant analysis
+crank_length = 0.170   # crank length in meters
+
+heart_zones = c(119,   # zone 0
+                151,   # zone 1
+                163,   # zone 2
+                171,   # zone 3
+                182,   # zone 4
+                195)   # zone 5
+
+power_zones = c(55,    # zone 0
+                113,   # zone 1
+                154,   # zone 2
+                185,   # zone 3
+                215,   # zone 4
+                246,   # zone 5
+                308,   # zone 6
+                410)   # zone 7
 
 # Library paths
 
@@ -262,4 +278,17 @@ power_report = function(d) {
                  normalized_power = normalized_power,
                  min_power = min_power,
                  max_power = max_power))
+}
+
+heart_rate_histogram = function(d) {
+    heart_rate = d$Heart.Rate..bpm.
+    max_heart_rate = max(heart_rate)
+    dynamic_zones = if (max_heart_rate > heart_zones[6]) 
+                       c(0, heart_zones[1:5], max_heart_rate)
+                    else
+                       c(0, heart_zones)
+    zones = hist(heart_rate, dynamic_zones, plot=FALSE)
+    zone_percentages = zones$counts / length(heart_rate) * 100
+    barplot(zone_percentages, names.arg=c(0, 1, 2, 3, 4, 5), xlab="Zones", ylab="Percentage", main="Heart Rate Zone Report")
+    box()
 }
