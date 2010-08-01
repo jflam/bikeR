@@ -304,23 +304,39 @@ power_histogram = function(d) {
     box()
 }
 
-# Experiments with plots using multiple y axis
-
-elevation_vs_speed = function(d) {
-    elevation = d$Altitude..m. * feet_per_meter
-    speed = d$Speed..m.s. * miles_per_meter_per_second
-
-    plot(1:length(speed), speed, axes=F, ylab="", xlab="", type="l", col="red")
-    axis(2, pretty(range(speed), 10), col.axis="red")
-    mtext("Speed (mph)", side=2, line=3, cex.lab=1,las=3, col="red")
+multi_plot = function(title, x, xname, y1, y1name, y2, y2name) {
+    par(oma = c(0, 2, 0, 4))
+    plot(x, y1, axes=F, ylab="", xlab="", type="l", col="green4")
+    axis(2, pretty(range(y1), 10), col.axis="green4")
+    mtext(y1name, side=2, line=3, cex.lab=1, las=3, col="green4")
 
     par(new=T)
-    
-    plot(1:length(elevation), elevation, axes=F, ylab = "", xlab="Time (s)", main="Elevation and Speed vs. Time", type="l", col="blue")
-    axis(4, pretty(range(elevation), 10), col.axis="blue")
-    mtext("Elevation (feet)", side=4, line=3, cex.lab=1,las=3, col="blue")
+    plot(x, y2, axes=F, ylab = "", xlab=xname, main=title, type="l", col="darkslategrey")
+    axis(4, pretty(range(y2), 10), col.axis="darkslategrey")
+    mtext(y2name, side=4, line=3, cex.lab=1, las=3, col="darkslategrey")
 
-    axis(1, pretty(range(1:length(speed)), 10))
+    axis(1, pretty(range(x), 8))
     box()
 }
 
+elevation_and_speed_vs_time = function(d) {
+    elevation = d$Altitude..m. * feet_per_meter
+    speed = d$Speed..m.s. * miles_per_meter_per_second
+    time = 1:length(speed) / 60
+
+    multi_plot("Elevation and Speed vs. Time", 
+               time, "Time (min)", 
+               elevation, "Elevation (feet)", 
+               speed, "Speed (mph)")
+}
+
+heart_rate_and_elevation_vs_time = function(d) {
+    heart_rate = d$Heart.Rate..bpm.
+    elevation = d$Altitude..m. * feet_per_meter
+    time = 1:length(heart_rate) / 60
+
+    multi_plot("Heart Rate and Elevation vs. Time",
+               time, "Time (min)",
+               heart_rate, "Heart Rate (bpm)",
+               elevation, "Elevation (feet)")
+}
