@@ -20,14 +20,14 @@ heart_zones = c(119,   # zone 0
                 182,   # zone 4
                 195)   # zone 5
 
-power_zones = c(55,    # zone 0
-                113,   # zone 1
-                154,   # zone 2
-                185,   # zone 3
-                215,   # zone 4
-                246,   # zone 5
-                308,   # zone 6
-                410)   # zone 7
+power_zones = c(0,            # zone 0
+                0.55 * ftp,   # zone 1
+                0.75 * ftp,   # zone 2
+                0.90 * ftp,   # zone 3
+                1.05 * ftp,   # zone 4
+                1.20 * ftp,   # zone 5
+                1.50 * ftp,   # zone 6
+                10000)        # zone 7
 
 # Library paths
 
