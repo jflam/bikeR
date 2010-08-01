@@ -292,3 +292,17 @@ heart_rate_histogram = function(d) {
     barplot(zone_percentages, names.arg=c(0, 1, 2, 3, 4, 5), xlab="Zones", ylab="Percentage", main="Heart Rate Zone Report")
     box()
 }
+
+power_histogram = function(d) {
+    power = d$Power..watts.
+    max_power = max(power)
+    dynamic_zones = if (max_power > heart_zones[8]) 
+                       c(0, power_zones[1:7], max_power)
+                    else
+                       c(0, power_zones)
+    zones = hist(power, dynamic_zones, plot=FALSE)
+    zone_percentages = zones$counts / length(power) * 100
+    barplot(zone_percentages, names.arg=c(0, 1, 2, 3, 4, 5, 6, 7), xlab="Zones", ylab="Percentage", main="Power Zone Report")
+    box()
+}
+
