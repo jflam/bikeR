@@ -66,16 +66,6 @@ load_all = function() {
     list(date = dates, data = data)
 }
 
-time_slice = function(d, start, duration) {
-    # TODO: convert time from hh::mm::ss into offset
-    subset(d, d$time_offset > start & d$time_offset < start + duration)   
-}
-
-loadx = function(x, path) {
-    load(path)
-    return(x)
-}
-
 # Remove all NA's and zero power values
 
 clean_power = function(d) {
@@ -94,45 +84,52 @@ normalized_power = function(power) {
     return (mean(power ** 4) ** 0.25)
 }
 
-calc_ftp = function(d) {
+# Compute peak average power over duration in seconds
+
+peak_average_power = function(d, duration) {
     power = clean_power(d)
-    p1 = filter(power**4,rep(1/1200,1200))
-    p2 = p1[!is.na(p1)]
-    p3 = p2 ** 0.25
-    ftp = max(p3) * 0.95
-    return (ftp)
+    p1 = filter(power, rep(1/duration, duration))
+    max_power = max(p1[!is.na(p1)])
+    return (max_power)
 }
 
-calc_avg20 = function(d) {
+# Compute peak normalized power over duration in seconds
+
+peak_normalized_power = function(d, duration) {
     power = clean_power(d)
-    p1 = filter(power,rep(1/1200,1200))
-    p2 = p1[!is.na(p1)]
-    mean(p2)
+    p1 = filter(power ** 4, rep(1/duration, duration))
+    max_power = max(p1[!is.na(p1)] ** 0.25)
+    return (max_power)
 }
 
-calc_ftp60 = function(d) {
+# Compute average power over entire ride
+
+average_power = function(d) {
     power = clean_power(d)
-    p1 = filter(power**4,rep(1/3600,3600))
-    p2 = p1[!is.na(p1)]
-    p3 = p2 ** 0.25
-    return (max(p3))
+    duration = length(power)
+    return (peak_average_power(d, duration))
+}
+
+# Compute normalized power over entire ride
+
+normalized_power = function(d) {
+    power = clean_power(d)
+    duration = length(power)
+    return (peak_normalized_power(d, duration))
 }
 
 # Variability index indicates much variability there was
 # in your ride over its duration
 
-variability_index = function(power) {
-    np = normalized_power(power)
-    return (np / mean(power))
+variability_index = function(d) {
+    return (normalized_power(d) / average_power(d))
 }
 
 # Intensity factor is the ratio of the normalized power for
 # the ride divided by the rider's functional threshold power
 
-intensity_factor = function(power) {
-    np = normalized_power(power)
-    npif = np / ftp
-    return (npif)
+intensity_factor = function(d) {
+    return (normalized_power(d) / ftp)
 }
 
 # Training stress score indicates a rough duration of 
@@ -142,9 +139,10 @@ intensity_factor = function(power) {
 # 300-450 High       Some residual fatigue even after 2 days
 # >450    Very high  Residual fatigue lasting several days likely
 
-training_stress_score = function(power, duration) {
-    np = normalized_power(power)
-    iff = intensity_factor(power)
+training_stress_score = function(d) {
+    duration = length(clean_power(d))
+    np = normalized_power(d)
+    iff = intensity_factor(d)
     return ((duration * np * iff / (ftp * 3600)) * 100)
 }
 
@@ -296,7 +294,7 @@ heart_rate_histogram = function(d) {
 power_histogram = function(d) {
     power = d$Power..watts.
     max_power = max(power)
-    dynamic_zones = if (max_power > heart_zones[8]) 
+    dynamic_zones = if (max_power > power_zones[8]) 
                        c(0, power_zones[1:7], max_power)
                     else
                        c(0, power_zones)
@@ -304,5 +302,11 @@ power_histogram = function(d) {
     zone_percentages = zones$counts / length(power) * 100
     barplot(zone_percentages, names.arg=c(0, 1, 2, 3, 4, 5, 6, 7), xlab="Zones", ylab="Percentage", main="Power Zone Report")
     box()
+}
+
+elevation_vs_speed = function(d) {
+    elevation = d$Altitude..m.
+    speed = d$Speed..m.s.
+    
 }
 
