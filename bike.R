@@ -304,9 +304,23 @@ power_histogram = function(d) {
     box()
 }
 
+# Experiments with plots using multiple y axis
+
 elevation_vs_speed = function(d) {
-    elevation = d$Altitude..m.
-    speed = d$Speed..m.s.
+    elevation = d$Altitude..m. * feet_per_meter
+    speed = d$Speed..m.s. * miles_per_meter_per_second
+
+    plot(1:length(speed), speed, axes=F, ylab="", xlab="", type="l", col="red")
+    axis(2, pretty(range(speed), 10), col.axis="red")
+    mtext("Speed (mph)", side=2, line=3, cex.lab=1,las=3, col="red")
+
+    par(new=T)
     
+    plot(1:length(elevation), elevation, axes=F, ylab = "", xlab="Time (s)", main="Elevation and Speed vs. Time", type="l", col="blue")
+    axis(4, pretty(range(elevation), 10), col.axis="blue")
+    mtext("Elevation (feet)", side=4, line=3, cex.lab=1,las=3, col="blue")
+
+    axis(1, pretty(range(1:length(speed)), 10))
+    box()
 }
 
