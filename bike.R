@@ -9,7 +9,7 @@ miles_per_meter_per_second = 3600 / 1000 * .62137
 
 # Rider constants
 
-ftp = 205              # functional threshold power in watts
+ftp = 190              # functional threshold power in watts
 quadrant_cadence = 80  # magic 80 rpm cadence value for quadrant analysis
 crank_length = 0.170   # crank length in meters
 
@@ -225,16 +225,16 @@ plot_quadrant = function(d, title=NA) {
     aepf_right = r$aepf[right]
 
     q3 = length(aepf_left[aepf_left < aepf])
-    q1 = length(aepf_left[aepf_left >= aepf])
+    q2 = length(aepf_left[aepf_left >= aepf])
     q4 = length(aepf_right[aepf_right < aepf])
-    q2 = length(aepf_right[aepf_right >= aepf])
+    q1 = length(aepf_right[aepf_right >= aepf])
 
     total = length(r$cpv)
 
     text(max(r$cpv) - 0.1, aepf + 20, sprintf("FTP: %dW", ftp), font=4, cex=0.8)
     text(cpv + 0.25, max(r$aepf), sprintf("Cadence: %d", quadrant_cadence), font=4, cex=0.8)
-    text(min(r$cpv) + 0.12, max(r$aepf), sprintf("Q1: %2.1f%%", q1/total*100), font=4, cex=0.8)
-    text(max(r$cpv) - 0.1, max(r$aepf), sprintf("Q2: %2.1f%%", q2/total*100), font=4, cex=0.8)
+    text(min(r$cpv) + 0.12, max(r$aepf), sprintf("Q2: %2.1f%%", q2/total*100), font=4, cex=0.8)
+    text(max(r$cpv) - 0.1, max(r$aepf), sprintf("Q1: %2.1f%%", q1/total*100), font=4, cex=0.8)
     text(min(r$cpv) + 0.12, min(r$aepf), sprintf("Q3: %2.1f%%", q3/total*100), font=4, cex=0.8)
     text(max(r$cpv) - 0.1, min(r$aepf), sprintf("Q4: %2.1f%%", q4/total*100), font=4, cex=0.8)
 }
