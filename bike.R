@@ -80,8 +80,11 @@ clean_power = function(d) {
 # Note that it is possible that the data set does not contain
 # power data, in which case the function returns NA.
 
-normalized_power = function(power) {
-    return (mean(power ** 4) ** 0.25)
+normalized_power = function(d) {
+    power = clean_power(d)
+    average_30s = filter(power, rep(1/30, 30))
+    average_30s = average_30s[!is.na(average_30s)]
+    return (mean(average_30s ** 4) ** 0.25)
 }
 
 # Compute peak average power over duration in seconds
@@ -112,7 +115,7 @@ average_power = function(d) {
 
 # Compute normalized power over entire ride
 
-normalized_power = function(d) {
+zznormalized_power = function(d) {
     power = clean_power(d)
     duration = length(power)
     return (peak_normalized_power(d, duration))
