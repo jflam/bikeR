@@ -9,6 +9,9 @@ including:
 * Computing normalized power for a ride
 * Generating power reports that contain the peak 5s, 1min, 5min, and FTP for your ride.
 
+Update: 11/12/2015 - after over 5 years, I'm going to start work on creating an 
+R notebook that contains the updated library with some additional analysis.
+
 3rd Party Software
 ------------------
 
